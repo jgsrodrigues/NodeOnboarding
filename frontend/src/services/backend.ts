@@ -38,14 +38,14 @@ class API {
     return instance.request(axiosRequestConfig);
   };
 
-  authenticate = (user: string, password: string) =>
-    this.makeRequest<{ token: string }>(
-      '/login',
-      'POST',
-      {
-        "Content-Type": "application/json",
-      },
-      { email: user, password });
+  authenticate = (user: string, password: string) => Promise.resolve({ token: '1'})
+    // this.makeRequest<{ token: string }>(
+    //   '/login',
+    //   'POST',
+    //   {
+    //     "Content-Type": "application/json",
+    //   },
+    //   { email: user, password });
 
   getProfile = (id?: string) => this.makeRequest<{ user: { _id: string, email: string } }>('/user/profile', 'GET', this.authHeader(), { id });
 }

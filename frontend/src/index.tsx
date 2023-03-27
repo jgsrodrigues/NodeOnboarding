@@ -1,12 +1,17 @@
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from 'react-query'
-import Root from './routes/root';
 import reportWebVitals from './reportWebVitals';
 import AuthRoute from './routes/auth';
-import Login from './routes/Login';
-import Profile from './routes/Profile';
+import Login from './pages/login';
+import Home from './pages/home';
+import SearchResults from './pages/searchResults';
 
 const queryClient = new QueryClient()
 
@@ -15,13 +20,12 @@ const App = () =>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Routes>
-          <Route path='/' element={<Root />} errorElement={<h1>ERROR</h1>}>
-            <Route path='/profile/:id?' element={<AuthRoute />} >
-              <Route index element={<Profile />} />
-            </Route>
+          <Route path="/" element={<AuthRoute />}>
+            <Route index element={<Home />} />
+            <Route path='searchResults' element={<SearchResults />} />
           </Route>
-          <Route path='/login' element={<Login />} errorElement={<h1>ERROR</h1>} />
-          <Route path="*" element={<h1>Ooops</h1>} />
+          <Route path='/login' element={<Login />} />
+          <Route path="*" element={<h1>404</h1>} />
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>
