@@ -12,6 +12,7 @@ import AuthRoute from './routes/auth';
 import Login from './pages/login';
 import Home from './pages/home';
 import SearchResults from './pages/searchResults';
+import MovieDetails from './pages/details';
 
 const queryClient = new QueryClient()
 
@@ -23,6 +24,7 @@ const App = () =>
           <Route path="/" element={<AuthRoute />}>
             <Route index element={<Home />} />
             <Route path='searchResults' element={<SearchResults />} />
+            <Route path='details/:id' element={<MovieDetails />} />
           </Route>
           <Route path='/login' element={<Login />} />
           <Route path="*" element={<h1>404</h1>} />
