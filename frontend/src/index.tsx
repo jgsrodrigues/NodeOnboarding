@@ -14,7 +14,7 @@ import Home from './pages/home';
 import SearchResults from './pages/searchResults';
 import MovieDetails from './pages/details';
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient();
 
 const App = () =>
   <React.StrictMode>

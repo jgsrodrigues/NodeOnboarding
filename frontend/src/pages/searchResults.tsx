@@ -1,22 +1,24 @@
-import { Container, CircularProgress, Button, Grid, Box, TextField, TextFieldProps } from "@mui/material";
-import { useQuery } from "react-query";
+import { Container, CircularProgress, Button, Grid, Box, TextField, TextFieldProps, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import TMDBAPI from "../services/TMDB";
+import { Movie, Person, TVShow } from "../services/TMDB";
 import SearchIcon from '@mui/icons-material/Search';
 import MovieBox from "../components/movieBox";
 import { useRef } from "react";
+import TVShowBox from "../components/tvShowBox";
+import PersonBox from "../components/personBox";
+import { MultiSearch } from "../lib/queryWraper";
 
 const SearchResults = () => {
   let navigate = useNavigate();
 
   let params = new URLSearchParams(window.location.search);
 
-  let x = params.get('term');
-  const { isLoading, data } = useQuery(['moviesSearch', x], () => {
-    if (x && x.length >= 3) {
-      return TMDBAPI.searchMovies(x);
-    }
-  });
+  let searchTerm = params.get('term');
+  const { isLoading, data } = MultiSearch(searchTerm);
+
+  const movies = data?.filter(item => item.media_type === 'movie').slice(0, 5) as Movie[];
+  const tvShows = data?.filter(item => item.media_type === 'tv').slice(0, 5) as TVShow[];
+  const persons = data?.filter(item => item.media_type === 'person').slice(0, 5) as Person[];
 
   const onSearch = (term?: string) => {
     if (term && term.length >= 3) {
@@ -47,7 +49,7 @@ const SearchResults = () => {
             margin="normal"
             type={'search'}
             inputRef={searchTermRef}
-            defaultValue={x}
+            defaultValue={searchTerm}
           />
           <Button
             onClick={() => onSearch(searchTermRef.current?.value as string)}
@@ -57,16 +59,44 @@ const SearchResults = () => {
           </Button>
         </Box>
       </Container>
-
-      {isLoading ? <CircularProgress /> :
-        <Grid container spacing={2} mt={5}>
-          {data?.map(movie =>
-            <Grid item xs={2} key={movie.id}>
-              <MovieBox movie={movie} key={movie.id} />
-            </Grid>
-          )}
-        </Grid>
-      }
+      <Container>
+        <Typography mt={5}>Movies</Typography>
+        {isLoading ? <CircularProgress /> :
+          <Grid container spacing={2} sx={{}}>
+            {movies?.length ? movies?.map(movie =>
+              <Grid item xs={2} key={movie.id}>
+                <MovieBox movie={movie} />
+              </Grid>
+            ) :
+              <Typography mt={5}>No results</Typography>
+            }
+          </Grid>
+        }
+        <Typography mt={5}>TV Shows</Typography>
+        {isLoading ? <CircularProgress /> :
+          <Grid container spacing={2} sx={{}}>
+            {tvShows.length ? tvShows?.map(show =>
+              <Grid item xs={2} key={show.id}>
+                <TVShowBox show={show} />
+              </Grid>
+            ) :
+              <Typography mt={5}>No results</Typography>
+            }
+          </Grid>
+        }
+        <Typography mt={5}>Person</Typography>
+        {isLoading ? <CircularProgress /> :
+          <Grid container spacing={2} sx={{}}>
+            {persons.length ? persons?.map(person =>
+              <Grid item xs={2} key={person.id}>
+                <PersonBox person={person} />
+              </Grid>
+            ) :
+              <Typography mt={5}>No results</Typography>
+            }
+          </Grid>
+        }
+      </Container>
     </Container>
   )
 };

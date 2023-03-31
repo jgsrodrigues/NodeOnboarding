@@ -1,15 +1,14 @@
 import { Container, TextField, Button, Box, CircularProgress, Grid } from "@mui/material";
-import { useQuery } from "react-query";
-import TMDBAPI from "../services/TMDB";
 import SearchIcon from '@mui/icons-material/Search';
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import MovieBox from "../components/movieBox";
+import { GetTop5Movies } from "../lib/queryWraper";
 
 const Home = () => {
   let navigate = useNavigate();
 
-  const { isLoading, data } = useQuery('popular', TMDBAPI.getPopularMovies);
+  const { isLoading, data } = GetTop5Movies();
   const { handleSubmit, register } = useForm<{ term: string }>();
 
   const onSearch = ({ term }: { term: string }) => {
@@ -46,8 +45,8 @@ const Home = () => {
 
       </Container>
       {isLoading ? <CircularProgress /> :
-        <Grid container spacing={2} mt={5}>
-          {data?.slice(0, 6).map(movie =>
+        <Grid container spacing={2} mt={5} sx={{ flexGrow: 1 }} justifyContent="center">
+          {data?.slice(0, 5).map(movie =>
             <Grid item xs={2} key={movie.id}>
               <MovieBox movie={movie} key={movie.id} />
             </Grid>

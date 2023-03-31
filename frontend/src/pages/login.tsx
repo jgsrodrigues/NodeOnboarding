@@ -19,8 +19,9 @@ type loginForm = {
 const Login = ({ state, navigate }: { state: any, navigate: NavigateFunction }) => {
   const { handleSubmit, formState, register } = useForm<loginForm>();
 
-  const onLoginSuccess = (response: { token: string }) => {
+  const onLoginSuccess = (response: { token: string, email: string }) => {
     sessionStorage.setItem('token', response.token);
+    sessionStorage.setItem('email', response.email);
     if (!state || state.referrer === window.location.pathname) {
       navigate('/');
     } else {
@@ -36,7 +37,6 @@ const Login = ({ state, navigate }: { state: any, navigate: NavigateFunction }) 
   const mutation = useMutation(({ email, password }: { email: string, password: string }) => API.authenticate(email, password).then(onLoginSuccess).catch(onLoginError));
 
   const onSubmit = (data: loginForm) => {
-    console.log(data);
     mutation.mutate(data);
   };
 

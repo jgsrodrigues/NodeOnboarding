@@ -6,24 +6,23 @@ import API from '../../services/backend';
 
 const Profile = () => {
   const { register, handleSubmit, formState } = useForm();
-  let { id } = useParams();
+  // let { id } = useParams();
 
-  console.log (id);
-  const { isLoading, isError, data, error } = useQuery<{ user: { _id: string, email: string }}, { message: string }>(['profile', id], () => API.getProfile(id))
+  // const { isLoading, isError, data, error } = useQuery<{ user: { _id: string, email: string }}, { message: string }>(['profile', id], () => API.getProfile(id))
 
-  if (isLoading) {
-    return <span>Loading...</span>
-  }
-  if (isError) {
-    return <span>Error: {error.message}</span>
-  }
+  // if (isLoading) {
+  //   return <span>Loading...</span>
+  // }
+  // if (isError) {
+  //   return <span>Error: {error.message}</span>
+  // }
 
   return (
     <>
-      <div>
+      {/* <div>
         <p>{data?.user._id}</p>
         <p>{data?.user.email}</p>
-      </div>
+      </div> */}
 
       <form onSubmit={handleSubmit(data => {
         console.log(data);

@@ -12,7 +12,7 @@ class API {
 
     const successResponseInterceptor = (response: any) => response.data;
     const errorResponseInterceptor = (error: any) => {
-      console.log(error);
+      console.error(error);
     }
 
     instance.interceptors.response.use(successResponseInterceptor, errorResponseInterceptor);
@@ -38,17 +38,26 @@ class API {
     return instance.request(axiosRequestConfig);
   };
 
-  authenticate = (user: string, password: string) => Promise.resolve({ token: '1'})
-    // this.makeRequest<{ token: string }>(
-    //   '/login',
-    //   'POST',
-    //   {
-    //     "Content-Type": "application/json",
-    //   },
-    //   { email: user, password });
+  authenticate = (user: string, password: string) =>
+    this.makeRequest<{ token: string, email: string }>(
+      '/login',
+      'POST',
+      {
+        "Content-Type": "application/json",
+      },
+      { email: user, password });
 
-  getProfile = (id?: string) => this.makeRequest<{ user: { _id: string, email: string } }>('/user/profile', 'GET', this.authHeader(), { id });
+  getProfile = () => this.makeRequest<User>('/user/profile', 'GET', this.authHeader());
+
+  addFavourite = (email: string, id: number, type: "movie" | "show" ) => this.makeRequest('/user/addFavourite', 'POST', this.authHeader(), { email, id, type });
+  removeFavourite = (email: string, id: number, type: "movie" | "show" ) => this.makeRequest('/user/removeFavourite', 'POST', this.authHeader(), { email, id, type });
 }
 
 const nodeAPI = new API();
 export default nodeAPI;
+
+type User = {
+  email: string;
+  favoriteMovies: number[];
+  favouriteTvShows: number[];
+}
