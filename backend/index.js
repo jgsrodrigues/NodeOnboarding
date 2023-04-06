@@ -19,7 +19,7 @@ const corsOptions = {
   origin: '*',
   optionsSuccessStatus: 200
 }
-
+app.use('/uploads', express.static('uploads'))
 app.use(cors(corsOptions));
 
 app.use(bodyParser.urlencoded({ extended: false }));

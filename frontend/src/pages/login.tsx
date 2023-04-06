@@ -24,8 +24,11 @@ const Login = ({ state, navigate }: { state: any, navigate: NavigateFunction }) 
     sessionStorage.setItem('email', response.email);
     if (!state || state.referrer === window.location.pathname) {
       navigate('/');
-    } else {
+    } else if (state.referrer) {
       navigate(state.referrer);
+    } else {
+      const queryString = new URLSearchParams(window.location.search);
+      navigate(queryString.get('refferer') || '/');
     }
   }
 

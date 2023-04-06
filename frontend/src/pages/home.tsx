@@ -1,9 +1,10 @@
-import { Container, TextField, Button, Box, CircularProgress, Grid } from "@mui/material";
+import { Container, TextField, Button, Box, CircularProgress, Grid, Avatar } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import MovieBox from "../components/movieBox";
 import { GetTop5Movies } from "../lib/queryWraper";
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 
 const Home = () => {
   let navigate = useNavigate();
@@ -16,8 +17,17 @@ const Home = () => {
     navigate(`/searchResults?${queryString}`)
   }
 
+  const onProfileClick = () => {
+    navigate('/profile');
+  }
+
   return (
     <>
+      <Button onClick={onProfileClick}>
+        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+          <LockOutlinedIcon />
+        </Avatar>
+      </Button>
       <Container maxWidth="xs">
         <Box
           sx={{

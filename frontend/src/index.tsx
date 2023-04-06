@@ -6,15 +6,15 @@ import '@fontsource/roboto/700.css';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from 'react-query'
+import { QueryClientProvider } from 'react-query'
 import reportWebVitals from './reportWebVitals';
 import AuthRoute from './routes/auth';
 import Login from './pages/login';
 import Home from './pages/home';
 import SearchResults from './pages/searchResults';
 import MovieDetails from './pages/details';
-
-const queryClient = new QueryClient();
+import Profile from './pages/profile';
+import queryClient from './lib/queryClient';
 
 const App = () =>
   <React.StrictMode>
@@ -25,6 +25,7 @@ const App = () =>
             <Route index element={<Home />} />
             <Route path='searchResults' element={<SearchResults />} />
             <Route path='details/:id' element={<MovieDetails />} />
+            <Route path='profile' element={<Profile />} />
           </Route>
           <Route path='/login' element={<Login />} />
           <Route path="*" element={<h1>404</h1>} />

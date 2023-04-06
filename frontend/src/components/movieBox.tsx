@@ -3,26 +3,28 @@ import { Link } from "react-router-dom"
 import { Movie } from "../services/TMDB"
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import { useQueryClient } from "react-query";
-import { AddFavourite, GetUserFavourites, RemoveFavourite } from "../lib/queryWraper";
+import { AddFavourite, useUserData, RemoveFavourite, AddRating } from "../lib/queryWraper";
+import RatingDialog from "./rating";
+import queryClient from "../lib/queryClient";
 
 const MovieBox = ({ movie }: { movie: Movie }) => {
 
-  const queryClient = useQueryClient();
+  const { data } = useUserData();
 
-  const { data } = GetUserFavourites();
-
-  const favouriteIconClicked = (movieId: number) => {
-    if (data?.favoriteMovies.includes(movieId)) {
-      RemoveFavourite(movieId, 'movie').then(() => {
-        queryClient.invalidateQueries({ queryKey: ['user'] });
-      });
+  const favouriteIconClicked = async () => {
+    if (data?.ratings?.find(m => m.ID === movie.id)) {
+      await RemoveFavourite(movie.id, 'movie')
     } else {
-      AddFavourite(movieId, 'movie').then(() => {
-        queryClient.invalidateQueries({ queryKey: ['user'] });
-      });
+      await AddFavourite(movie.id, 'movie')
     }
+    queryClient.invalidateQueries('user');
   }
+
+  const onNewRating = (rating: number) => {
+    AddRating(movie.id, 'movie', rating);
+  };
+
+  const currentUserRating = data?.ratings?.find(rating => rating.ID === movie.id && rating.type === 'movie');
 
   return (
     <Card sx={{ maxWidth: 345 }}>
@@ -34,6 +36,7 @@ const MovieBox = ({ movie }: { movie: Movie }) => {
         />
       </Link>
       <CardContent>
+        <RatingDialog watchable={movie} onRating={onNewRating} currentRating={currentUserRating?.rating || 0} />
         <Typography gutterBottom variant="h5" component="div">
           {movie.title}
         </Typography>
@@ -42,8 +45,8 @@ const MovieBox = ({ movie }: { movie: Movie }) => {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small" onClick={() => favouriteIconClicked(movie.id)}>
-          {data?.favoriteMovies.includes(movie.id) ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+        <Button size="small" onClick={favouriteIconClicked}>
+          {currentUserRating?.isFavourite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
         </Button>
       </CardActions>
     </Card>

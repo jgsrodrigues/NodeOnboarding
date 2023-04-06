@@ -13,12 +13,13 @@ const UserSchema = new Schema({
     type: String,
     required: true
   },
-  favoriteMovies: {
-    type: [Number]
+  name: {
+    type: String,
   },
-  favouriteTvShows: {
-    type: [Number]
-  }
+  picture: {
+    type: String,
+  },
+  ratings: [{ type: Schema.Types.ObjectId, ref: 'rating' }],
 });
 
 UserSchema.pre(
